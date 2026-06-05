@@ -85,43 +85,22 @@ export default function AccountSection() {
 const SHARE_URL = "https://uginyoonji.vercel.app";
 
 const handleKakaoShare = () => {
-  const key = import.meta.env.VITE_KAKAO_JS_KEY;
+  // 카카오 SDK 앱 심사 없이 동작하는 URL 공유 방식
+  const encodedUrl = encodeURIComponent(SHARE_URL);
+  const kakaoShareUrl = `https://sharer.kakao.com/talk/friends/picker/easylink?app_key=${import.meta.env.VITE_KAKAO_JS_KEY}&url=${encodedUrl}`;
 
-  if (!key) {
-    alert("카카오 공유 키가 설정되지 않았습니다.");
-    return;
-  }
-
-  if (!window.Kakao) {
-    alert("카카오 SDK 로드 실패. 잠시 후 다시 시도해주세요.");
-    return;
-  }
-
-  if (!window.Kakao.isInitialized()) {
-    window.Kakao.init(key);
-  }
-
-  window.Kakao.Share.sendDefault({
-    objectType: "feed",
-    content: {
+  if (navigator.share) {
+    // Web Share API 지원 기기 (대부분 모바일)
+    navigator.share({
       title: `${WEDDING.groomNameKo} ♥ ${WEDDING.brideNameKo} 결혼합니다`,
-      description: `${WEDDING.dateKo}\n${WEDDING.venue}`,
-      imageUrl: `${SHARE_URL}/og-image.png`,
-      link: {
-        mobileWebUrl: SHARE_URL,
-        webUrl: SHARE_URL,
-      },
-    },
-    buttons: [
-      {
-        title: "청첩장 보기",
-        link: {
-          mobileWebUrl: SHARE_URL,
-          webUrl: SHARE_URL,
-        },
-      },
-    ],
-  });
+      text: `${WEDDING.dateKo} | ${WEDDING.venue}`,
+      url: SHARE_URL,
+    }).catch(() => {
+      window.open(kakaoShareUrl, "_blank");
+    });
+  } else {
+    window.open(kakaoShareUrl, "_blank");
+  }
 };
 
   const handleLinkShare = async () => {
