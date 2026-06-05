@@ -131,7 +131,7 @@ export default function HeroSection({ phase }: Props) {
         <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 600, fontSize: "4.9cqw", whiteSpace: "nowrap" }}>
           {WEDDING.dateDisplay}
         </p>
-        <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 400, fontSize: "3.3cqw", lineHeight: 1.2 }}>
+        <p style={{ margin: 0, marginTop: "6px", fontFamily: "'Cormorant Infant', serif", fontWeight: 400, fontSize: "3.3cqw", lineHeight: 1.2 }}>
           {WEDDING.tagline1}<br />{WEDDING.tagline2}
         </p>
       </div>
