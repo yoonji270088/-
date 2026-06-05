@@ -41,10 +41,10 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
 
   // stagger + onComplete
   useEffect(() => {
-    const t1 = setTimeout(() => setShowSave(true), 300);
-    const t2 = setTimeout(() => setShowThe(true), 800);
-    const t3 = setTimeout(() => setShowDate(true), 1300);
-    const t4 = setTimeout(() => {
+    setTimeout(() => setShowSave(true), 300);
+    setTimeout(() => setShowThe(true), 800);
+    setTimeout(() => setShowDate(true), 1300);
+    setTimeout(() => {
       // 사진 애니메이션 시작 이벤트
       window.dispatchEvent(new Event("hero-start"));
       onComplete();
