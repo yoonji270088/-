@@ -11,8 +11,9 @@ html, body {
   margin: 0;
   padding: 0;
   width: 100%;
-  /* x축 스크롤 차단, y축은 body가 자연스럽게 스크롤 */
   overflow-x: hidden;
+  overscroll-behavior: none;
+  scrollbar-gutter: stable;
   background-color: #c8c5bc;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -26,7 +26,10 @@ export default function App() {
   // useCallback으로 참조 고정 — SplashOverlay의 useEffect 재실행 방지
   const handleSplashComplete = useCallback(() => {
     setPhase("transitioning");
-    setTimeout(() => setPhase("done"), 1500);
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      setPhase("done");
+    }, 1500);
   }, []);
 
   const isSplashVisible = phase === "splash" || phase === "transitioning";
