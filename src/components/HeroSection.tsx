@@ -13,14 +13,13 @@ export default function HeroSection({ phase }: Props) {
   const groupRef = useRef<HTMLDivElement>(null);
   const dateRef  = useRef<HTMLDivElement>(null);
 
-  // 사진 등장 애니메이션 (transitioning 시작 시 1회)
   useEffect(() => {
     if ((phase === "transitioning" || phase === "done") && !photoStarted.current) {
       photoStarted.current = true;
-      photoControls.start({ opacity: 1, y: 6, transition: { duration: 0.7, ease: "easeOut" } });
+      photoControls.start({ opacity: 1, top: "6px", transition: { duration: 0.7, ease: "easeOut" } });
       const t = setTimeout(() => {
         photoControls.start({
-          y: -60,
+          top: "-60px",
           transition: { duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] },
         });
       }, 700);
@@ -28,8 +27,6 @@ export default function HeroSection({ phase }: Props) {
     }
   }, [phase, photoControls]);
 
-  // hero 텍스트 visibility는 SplashOverlay의 전환 완료 시점에 맞춰
-  // SplashOverlay에서 직접 getElementById로 제어함 → 여기선 done 폴백만 유지
   useEffect(() => {
     if (phase === "done") {
       if (namesRef.current) namesRef.current.style.visibility = "visible";
@@ -44,10 +41,9 @@ export default function HeroSection({ phase }: Props) {
         width: "100%",
         height: "100svh",
         position: "relative",
-        overflow: "hidden",
+        overflow: "clip", /* hidden 대신 clip — 스크롤 컨텍스트 생성 안 함 → 스크롤 중 요소 위치 고정 */
         flexShrink: 0,
         containerType: "inline-size",
-        willChange: "transform",
         backgroundColor: "#ecece9",
         backgroundImage: `url('${ASSETS.paperTexture}')`,
         backgroundSize: "cover",
@@ -146,28 +142,25 @@ export default function HeroSection({ phase }: Props) {
           zIndex: 2,
         }}
       >
-        {/* 센터링 래퍼(transform)와 motion(y 애니메이션)을 분리 → GPU 레이어 충돌 방지 */}
-        <div style={{
-          position: "absolute",
-          top: 0,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "88%", maxWidth: "330px",
-          aspectRatio: "346 / 268",
-          zIndex: 1, overflow: "hidden",
-        }}>
-          <motion.div
-            animate={photoControls}
-            initial={{ opacity: 0, y: 0 }}
-            style={{ width: "100%", height: "100%" }}
-          >
-            <img
-              src={ASSETS.heroPhoto}
-              alt="Wedding photo"
-              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", filter: "grayscale(100%)", display: "block" }}
-            />
-          </motion.div>
-        </div>
+        <motion.div
+          animate={photoControls}
+          style={{
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+            top: "0%",
+            opacity: 0,
+            width: "88%", maxWidth: "330px",
+            aspectRatio: "346 / 268",
+            zIndex: 1, overflow: "hidden",
+          }}
+        >
+          <img
+            src={ASSETS.heroPhoto}
+            alt="Wedding photo"
+            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", filter: "grayscale(100%)", display: "block" }}
+          />
+        </motion.div>
 
         <div style={{ position: "absolute", bottom: 0, left: 0, width: "100%", zIndex: 3, pointerEvents: "none", lineHeight: 0 }}>
           <img src={ASSETS.envelope} alt="" style={{ width: "100%", display: "block" }} />
