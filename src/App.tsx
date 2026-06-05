@@ -18,13 +18,12 @@ export default function App() {
   const [phase, setPhase] = useState<Phase>("splash");
   const sectionsRef = useRef<HTMLDivElement>(null);
 
-  // 새로고침 시 항상 최상단으로 + splash 시작
   useEffect(() => {
     window.scrollTo(0, 0);
     preloadImages([ASSETS.paperTexture, ASSETS.heroPhoto, ASSETS.envelope]);
   }, []);
 
-  // splash/transitioning 중 scroll 위치 강제 고정 (Android Chrome 대응)
+  // splash/transitioning 중 스크롤 위치 고정 (Android Chrome 대응)
   useEffect(() => {
     if (phase === "splash" || phase === "transitioning") {
       const lockScroll = () => window.scrollTo(0, 0);
@@ -46,16 +45,15 @@ export default function App() {
         width: "100%",
         minWidth: "320px",
         maxWidth: "430px",
-        minHeight: "100dvh",
         position: "relative",
         backgroundColor: "#ecece9",
         display: "flex",
         flexDirection: "column",
+        // overflow 지정 없음 → body 스크롤만 사용
       }}
     >
       <HeroSection phase={phase} />
 
-      {/* 섹션들: 항상 DOM에 존재 — splash 중엔 숨김 */}
       <div
         ref={sectionsRef}
         style={{
