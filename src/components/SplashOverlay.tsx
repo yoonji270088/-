@@ -36,6 +36,14 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
     };
   }, []);
 
+  // transitioning 시작 시 배경이 화면을 덮고 있는 동안 미리 스크롤 복원
+  // → 스크롤바가 생기는 순간이 어둠 속에 가려져 layout shift 안 보임
+  useEffect(() => {
+    if (phase === "transitioning") {
+      document.body.style.overflow = "";
+    }
+  }, [phase]);
+
   // Names, Date fade-in (최초 1회)
   useEffect(() => {
     namesCtrl.start({ opacity: 1, transition: { duration: 0.6, delay: 0.1 } });
