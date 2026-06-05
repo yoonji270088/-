@@ -16,6 +16,8 @@ html, body {
   background-color: #c8c5bc;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 #root {
