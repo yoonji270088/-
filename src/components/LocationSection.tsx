@@ -167,7 +167,7 @@ export default function LocationSection() {
         <KakaoMap />
         <div style={{ display: "flex", gap: "6px", width: "100%" }}>
           <NaviBtn label="티맵"       deepLink={naviLinks.tmap}      webLink={naviLinks.tmapWeb} />
-          <NaviBtn label="카카오내비"  deepLink={naviLinks.kakaoNavi} webLink={naviLinks.kakaoNaviWeb} />
+          <NaviBtn label="카카오맵"  deepLink={naviLinks.kakaoNavi} webLink={naviLinks.kakaoNaviWeb} />
           <NaviBtn label="네이버지도"  deepLink={naviLinks.naverMap}  webLink={naviLinks.naverMapWeb} />
         </div>
       </div>
@@ -203,7 +203,7 @@ export default function LocationSection() {
           <p style={{ fontFamily: "'Pretendard', sans-serif", fontWeight: 600, fontSize: "clamp(13px, 4vw, 16px)", color: "#000", margin: 0 }}>주차장 안내</p>
           <ul style={{ margin: 0, paddingLeft: "18px", display: "flex", flexDirection: "column", gap: "4px" }}>
             {["・ 티웨딩홀 지하 4층 ~ 지상 3층", "・ 평택시청 주차장", "・ 배미공원 지하 공영주차장", "・ 공설운동장 주차장"].map((item) => (
-              <li key={item} style={{ fontFamily: "'Pretendard', sans-serif", fontWeight: 400, fontSize: "clamp(12px, 3.5vw, 14px)", color: "#323232", opacity: 0.7, lineHeight: 1.7 }}>{item}</li>
+              <li key={item} style={{ listStyleType: "disc", fontFamily: "'Pretendard', sans-serif", fontWeight: 400, fontSize: "clamp(12px, 3.5vw, 14px)", color: "#323232", opacity: 0.7, lineHeight: 1.7 }}>{item}</li>
             ))}
           </ul>
         </div>
