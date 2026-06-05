@@ -121,7 +121,7 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
           initial={{ opacity: 0 }}
           style={{
             position: "absolute",
-            top: "30vh",
+            top: "24vh",
             left: 0, right: 0,
             display: "flex",
             justifyContent: "center",
@@ -158,7 +158,7 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
         <div
           style={{
             position: "absolute",
-            top: "calc(30vh + clamp(48px, 18.2vw, 70px))",
+            top: "56vh",
             left: 0, right: 0,
             display: "flex",
             justifyContent: "center",

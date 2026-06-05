@@ -64,7 +64,7 @@ export default function HeroSection({ phase }: Props) {
           alignItems: "center",
           gap: "6px",
           color: "#00226a",
-          opacity: textVisible ? 1 : 0,
+          visibility: textVisible ? "visible" : "hidden",
         }}
       >
         <span style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 400, fontSize: "4cqw", whiteSpace: "nowrap" }}>
@@ -89,7 +89,7 @@ export default function HeroSection({ phase }: Props) {
           transform: "translateX(-50%)",
           width: "74.7cqw",
           height: "41.3cqw",
-          opacity: textVisible ? 1 : 0,
+          visibility: textVisible ? "visible" : "hidden",
         }}
       >
         {(["SAVE", "The", "DATE"] as const).map((word) => (
@@ -123,7 +123,7 @@ export default function HeroSection({ phase }: Props) {
           textAlign: "center",
           color: "#00226a",
           paddingInline: "16px",
-          opacity: textVisible ? 1 : 0,
+          visibility: textVisible ? "visible" : "hidden",
         }}
       >
         <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 600, fontSize: "5.3cqw", whiteSpace: "nowrap" }}>
