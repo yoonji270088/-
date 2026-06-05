@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import HeroSection       from "./components/HeroSection";
 import SplashOverlay     from "./components/SplashOverlay";
 import InvitationSection from "./components/InvitationSection";
@@ -23,10 +23,11 @@ export default function App() {
     preloadImages([ASSETS.paperTexture, ASSETS.heroPhoto, ASSETS.envelope]);
   }, []);
 
-  const handleSplashComplete = () => {
+  // useCallback으로 참조 고정 — SplashOverlay의 useEffect 재실행 방지
+  const handleSplashComplete = useCallback(() => {
     setPhase("transitioning");
     setTimeout(() => setPhase("done"), 1500);
-  };
+  }, []);
 
   const isSplashVisible = phase === "splash" || phase === "transitioning";
 
@@ -42,7 +43,6 @@ export default function App() {
         flexDirection: "column",
       }}
     >
-      {/* phase prop 제거 — HeroSection은 커스텀 이벤트로만 제어 */}
       <HeroSection phase={phase} />
 
       <div

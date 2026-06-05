@@ -21,6 +21,10 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
   const groupRef = useRef<HTMLDivElement>(null);
   const dateRef  = useRef<HTMLDivElement>(null);
 
+  // 타이머 ref로 관리 — cleanup 시 확실히 취소
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const startedRef = useRef(false);
+
   // 스크롤 잠금 — iOS Safari touchmove 차단
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -33,23 +37,35 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
     };
   }, []);
 
-  // Names, Date fade-in
+  // Names, Date fade-in (최초 1회만)
   useEffect(() => {
     namesCtrl.start({ opacity: 1, transition: { duration: 0.6, delay: 0.1 } });
     dateCtrl.start({ opacity: 1, transition: { duration: 0.6, delay: 0.3 } });
-  }, [namesCtrl, dateCtrl]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // stagger + onComplete
+  // stagger + onComplete — 최초 1회만 실행, unmount 시 타이머 전부 취소
   useEffect(() => {
-    setTimeout(() => setShowSave(true), 300);
-    setTimeout(() => setShowThe(true), 800);
-    setTimeout(() => setShowDate(true), 1300);
-    setTimeout(() => {
-      // 사진 애니메이션 시작 이벤트
+    if (startedRef.current) return;
+    startedRef.current = true;
+
+    const add = (fn: () => void, ms: number) => {
+      const t = setTimeout(fn, ms);
+      timersRef.current.push(t);
+    };
+
+    add(() => setShowSave(true), 300);
+    add(() => setShowThe(true),  800);
+    add(() => setShowDate(true), 1300);
+    add(() => {
       window.dispatchEvent(new Event("hero-start"));
       onComplete();
     }, 3500);
-  }, [onComplete]);
+
+    return () => {
+      timersRef.current.forEach(clearTimeout);
+      timersRef.current = [];
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // transitioning → Hero 위치로 이동
   useEffect(() => {
@@ -83,8 +99,6 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
       (p as HTMLElement).style.transition = "color 1.1s ease-in-out";
       (p as HTMLElement).style.color = "#00226a";
     });
-
-    // 전환 완료 후 Hero 텍스트 표시 이벤트 (1.3s transition 끝난 뒤)
   }, [phase, namesCtrl, groupCtrl, dateCtrl]);
 
   const isTransitioning = phase === "transitioning";
@@ -210,6 +224,7 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
         </motion.div>
 
       </motion.div>
+
     </div>
   );
 }
