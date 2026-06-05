@@ -21,7 +21,7 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
   const groupRef = useRef<HTMLDivElement>(null);
   const dateRef  = useRef<HTMLDivElement>(null);
 
-  // 스크롤 잠금 — splash 중에만
+  // 스크롤 잠금
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.overflow = "hidden";
@@ -58,9 +58,10 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
     const dur = 1.3;
     const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
 
-    const namesR  = namesRef.current.getBoundingClientRect();
-    const groupR  = groupRef.current.getBoundingClientRect();
-    const dateR   = dateRef.current.getBoundingClientRect();
+    // 각 ref 요소 기준으로 delta 계산 (wrapper 기준이 아닌 실제 요소 기준)
+    const namesR = namesRef.current.getBoundingClientRect();
+    const groupR = groupRef.current.getBoundingClientRect();
+    const dateR  = dateRef.current.getBoundingClientRect();
 
     const namesDx = heroNames.getBoundingClientRect().left - namesR.left;
     const namesDy = heroNames.getBoundingClientRect().top  - namesR.top;
@@ -83,15 +84,10 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
   const fontSize = "14.9cqw";
 
   return (
-    // position: fixed → 뷰포트 기준, x축 튕김 없음
     <div
       style={{
         position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        // 100dvh: 모바일 브라우저 주소창/하단바 포함한 실제 뷰포트 높이
-        bottom: 0,
+        top: 0, left: 0, right: 0, bottom: 0,
         zIndex: 20,
         overflow: "hidden",
         pointerEvents: isTransitioning ? "none" : "auto",
@@ -106,138 +102,118 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
         style={{ position: "absolute", inset: 0, backgroundColor: "#041438" }}
       />
 
-      {/* 내부 컨테이너: App과 동일한 maxWidth 430px */}
+      {/* 내부 컨테이너 */}
       <div
         style={{
           position: "relative",
           width: "100%",
           maxWidth: "430px",
           minWidth: "320px",
-          // 100svh: 브라우저 UI가 최대로 표시될 때의 안전한 높이 (레이아웃 기준)
-          height: "100svh",
+          height: "100%",
           containerType: "inline-size",
-          // 세 그룹을 column flex로 배치 → 하나의 레이아웃 단위로 움직임
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 0,
         }}
       >
 
-        {/*
-          ┌─────────────────────────────┐
-          │  Names                      │  ← 그룹 상단
-          │  SAVE / The / DATE          │  ← 그룹 중단
-          │  (spacer)                   │
-          │  Date + Tagline             │  ← 그룹 하단 (고정 간격)
-          └─────────────────────────────┘
-          전체 블록을 flex column + justify center으로 화면 중앙에 배치
-          → 브라우저 UI 높이 변화에도 세 요소가 함께 이동
-        */}
-
-        {/* ── 상단 그룹: Names + SAVE/The/DATE ── */}
-        <div
+        {/* Names */}
+        <motion.div
+          ref={namesRef}
+          animate={namesCtrl}
+          initial={{ opacity: 0 }}
           style={{
+            position: "absolute",
+            top: "30vh",
+            left: 0, right: 0,
             display: "flex",
-            flexDirection: "column",
+            justifyContent: "center",
             alignItems: "center",
-            gap: "clamp(10px, 4.8vw, 20px)",
+            gap: "6px",
+            color: "#dddcbc",
+            zIndex: 2,
           }}
         >
-          {/* Names */}
-          <motion.div
-            ref={namesRef}
-            animate={namesCtrl}
-            initial={{ opacity: 0 }}
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "6px",
-              color: "#dddcbc",
-              zIndex: 2,
-            }}
+          <motion.span
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 300, fontSize: "4cqw", whiteSpace: "nowrap" }}
           >
-            <motion.span
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 300, fontSize: "4cqw", whiteSpace: "nowrap" }}
-            >
-              {WEDDING.groomNameEn}
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              style={{ fontFamily: "'Mrs Saint Delafield', cursive", fontSize: "5.6cqw", lineHeight: 1 }}
-            >
-              &amp;
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 300, fontSize: "4cqw", whiteSpace: "nowrap" }}
-            >
-              {WEDDING.brideNameEn}
-            </motion.span>
-          </motion.div>
+            {WEDDING.groomNameEn}
+          </motion.span>
+          <motion.span
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            style={{ fontFamily: "'Mrs Saint Delafield', cursive", fontSize: "5.6cqw", lineHeight: 1 }}
+          >
+            &amp;
+          </motion.span>
+          <motion.span
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 300, fontSize: "4cqw", whiteSpace: "nowrap" }}
+          >
+            {WEDDING.brideNameEn}
+          </motion.span>
+        </motion.div>
 
-          {/* SAVE / The / DATE */}
+        {/* SAVE / The / DATE — groupCtrl을 wrapper가 아닌 실제 요소(groupRef)에 직접 적용 */}
+        <div
+          style={{
+            position: "absolute",
+            top: "calc(30vh + clamp(48px, 18.2vw, 70px))",
+            left: 0, right: 0,
+            display: "flex",
+            justifyContent: "center",
+            zIndex: 2,
+          }}
+        >
           <motion.div
+            ref={groupRef}
             animate={groupCtrl}
             style={{
-              display: "flex",
-              justifyContent: "center",
-              zIndex: 2,
+              position: "relative",
+              width: "74.7cqw",
+              height: "41.3cqw",
+              flexShrink: 0,
             }}
           >
-            <div
-              ref={groupRef}
-              style={{
-                position: "relative",
-                width: "74.7cqw",
-                height: "41.3cqw",
-                flexShrink: 0,
-              }}
-            >
-              {showSave && (
-                <motion.p
-                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                  style={{ margin: 0, lineHeight: 1, whiteSpace: "nowrap", position: "absolute",
-                    top: 0, left: 0, color: "#dddcbc",
-                    fontFamily: "'Cormorant Upright', serif", fontWeight: 300, fontSize }}
-                >SAVE</motion.p>
-              )}
-              {showThe && (
-                <motion.p
-                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                  style={{ margin: 0, lineHeight: 1, whiteSpace: "nowrap", position: "absolute",
-                    top: "37%", left: "39%", color: "#dddcbc",
-                    fontFamily: "'Mrs Saint Delafield', cursive", fontSize }}
-                >The</motion.p>
-              )}
-              {showDate && (
-                <motion.p
-                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                  style={{ margin: 0, lineHeight: 1, whiteSpace: "nowrap", position: "absolute",
-                    top: "58%", right: 0, color: "#dddcbc",
-                    fontFamily: "'Cormorant Upright', serif", fontWeight: 300, fontSize }}
-                >DATE</motion.p>
-              )}
-            </div>
+            {showSave && (
+              <motion.p
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                style={{ margin: 0, lineHeight: 1, whiteSpace: "nowrap", position: "absolute",
+                  top: 0, left: 0, color: "#dddcbc",
+                  fontFamily: "'Cormorant Upright', serif", fontWeight: 300, fontSize }}
+              >SAVE</motion.p>
+            )}
+            {showThe && (
+              <motion.p
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                style={{ margin: 0, lineHeight: 1, whiteSpace: "nowrap", position: "absolute",
+                  top: "37%", left: "39%", color: "#dddcbc",
+                  fontFamily: "'Mrs Saint Delafield', cursive", fontSize }}
+              >The</motion.p>
+            )}
+            {showDate && (
+              <motion.p
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                style={{ margin: 0, lineHeight: 1, whiteSpace: "nowrap", position: "absolute",
+                  top: "58%", right: 0, color: "#dddcbc",
+                  fontFamily: "'Cormorant Upright', serif", fontWeight: 300, fontSize }}
+              >DATE</motion.p>
+            )}
           </motion.div>
         </div>
 
-        {/* ── 하단 그룹: Date + Tagline (상단 그룹과 고정 간격 유지) ── */}
+        {/* Date + Tagline */}
         <motion.div
           ref={dateRef}
           animate={dateCtrl}
           initial={{ opacity: 0 }}
           style={{
-            marginTop: "clamp(28px, 8svh, 56px)",
+            position: "absolute",
+            bottom: "clamp(36px, 6vh, 60px)",
+            left: 0, right: 0,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
