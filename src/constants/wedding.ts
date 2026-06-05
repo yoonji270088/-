@@ -29,14 +29,14 @@ export const WEDDING = {
       { name: "김용선", bank: "농협은행",   number: "100104-52-180328" },
     ],
   },
-  location: { placeId: "26796717", placeName: "티웨딩홀", address: "경기도 평택시 평택5로34번길 6-5" },
+  location: { placeId: "26796717", placeName: "티웨딩 평택", address: "경기도 평택시 평택5로34번길 6-5" },
   naviLinks: {
     // 카카오: 장소명 검색 → 결과에서 길찾기
     kakaoNavi:    "kakaomap://search?query=티웨딩+평택",
     kakaoNaviWeb: "https://map.kakao.com/link/search/티웨딩+평택",
     // 티맵: 장소명 검색
     tmap:    "tmap://search?version=1&searchKeyword=티웨딩+평택",
-    tmapWeb: "https://www.tmap.co.kr/",
+    tmapWeb: "https://m.tmap.co.kr/search/detail?searchQuery=티웨딩+평택",
     // 네이버: 장소명 검색
     naverMap:    "nmap://search?query=티웨딩+평택&appname=wedding",
     naverMapWeb: "https://map.naver.com/v5/search/티웨딩+평택",

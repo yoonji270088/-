@@ -103,14 +103,23 @@ function NaviBtn({ label, deepLink, webLink }: { label: string; deepLink: string
   return (
     <button
       onClick={() => {
-        // iframe으로 deep link 시도 → 현재 페이지 유지 (location.href 쓰면 페이지가 날아감)
+        const isKakaoInApp = /KAKAOTALK/i.test(navigator.userAgent);
+
+        if (isKakaoInApp) {
+          // 카카오 인앱브라우저: iframe deep link → 탭 닫힘 문제 있음
+          // 대신 웹 URL을 새 탭으로 열기 (탭 유지됨)
+          window.open(webLink, "_blank");
+          return;
+        }
+
+        // 일반 브라우저: iframe으로 deep link 시도 → 현재 페이지 유지
         const iframe = document.createElement("iframe");
         iframe.style.cssText = "display:none;width:0;height:0;border:none;";
         iframe.src = deepLink;
         document.body.appendChild(iframe);
         setTimeout(() => { iframe.parentNode?.removeChild(iframe); }, 1000);
 
-        // 앱이 열리면 visibilitychange 발생 → fallback 취소
+        // 앱 열리면 visibilitychange 발생 → fallback 취소
         let appOpened = false;
         const onHide = () => { appOpened = true; };
         document.addEventListener("visibilitychange", onHide, { once: true });
