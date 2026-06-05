@@ -106,7 +106,7 @@ const handleKakaoShare = () => {
     content: {
       title: `${WEDDING.groomNameKo} ♥ ${WEDDING.brideNameKo} 결혼합니다`,
       description: `${WEDDING.dateKo}\n${WEDDING.venue}`,
-      imageUrl: `${SHARE_URL}/og-image.jpg`,
+      imageUrl: `${SHARE_URL}/og-image.png`,
       link: {
         mobileWebUrl: SHARE_URL,
         webUrl: SHARE_URL,
