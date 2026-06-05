@@ -106,9 +106,9 @@ function NaviBtn({ label, deepLink, webLink }: { label: string; deepLink: string
         const isKakaoInApp = /KAKAOTALK/i.test(navigator.userAgent);
 
         if (isKakaoInApp) {
-          // 카카오 인앱브라우저: iframe deep link → 탭 닫힘 문제 있음
-          // 대신 웹 URL을 새 탭으로 열기 (탭 유지됨)
-          window.open(webLink, "_blank");
+          // iOS 카카오 인앱브라우저: tmap://, kakaomap:// 커스텀 스킴은
+          // 페이지를 이동시키지 않고 앱만 실행 → 탭 유지됨
+          window.location.href = deepLink;
           return;
         }
 
