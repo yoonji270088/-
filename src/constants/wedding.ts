@@ -36,7 +36,7 @@ export const WEDDING = {
     kakaoNaviWeb: "https://map.kakao.com/link/search/티웨딩+평택",
     // 티맵: 장소명 검색
     tmap:    "tmap://search?version=1&searchKeyword=티웨딩+평택",
-    tmapWeb: "https://m.tmap.co.kr/search/detail?searchQuery=티웨딩+평택",
+    tmapWeb: "https://www.tmap.co.kr/",
     // 네이버: 장소명 검색
     naverMap:    "nmap://search?query=티웨딩+평택&appname=wedding",
     naverMapWeb: "https://map.naver.com/v5/search/티웨딩+평택",
