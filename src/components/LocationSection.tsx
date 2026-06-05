@@ -34,7 +34,7 @@ function KakaoMap({ onCoords }: { onCoords?: (lat: number, lng: number) => void 
             const lat = parseFloat(place.y);
             const lng = parseFloat(place.x);
 
-            // 부모에 좌표 전달 → 네비 링크에 사용
+                      // 부모에 좌표 전달 → 네비 링크에 사용
             onCoords?.(lat, lng);
 
             const center = new window.kakao.maps.LatLng(lat, lng);
@@ -103,14 +103,17 @@ function NaviBtn({ label, deepLink, webLink }: { label: string; deepLink: string
   return (
     <button
       onClick={() => {
-        // 앱 열림 여부를 visibilitychange로 감지
-        // → 앱이 열리면 fallback 취소, 앱 없으면 웹으로 이동
+        // iframe으로 deep link 시도 → 현재 페이지 유지 (location.href 쓰면 페이지가 날아감)
+        const iframe = document.createElement("iframe");
+        iframe.style.cssText = "display:none;width:0;height:0;border:none;";
+        iframe.src = deepLink;
+        document.body.appendChild(iframe);
+        setTimeout(() => { iframe.parentNode?.removeChild(iframe); }, 1000);
+
+        // 앱이 열리면 visibilitychange 발생 → fallback 취소
         let appOpened = false;
         const onHide = () => { appOpened = true; };
         document.addEventListener("visibilitychange", onHide, { once: true });
-
-        window.location.href = deepLink;
-
         setTimeout(() => {
           document.removeEventListener("visibilitychange", onHide);
           if (!appOpened) window.open(webLink, "_blank");
@@ -139,7 +142,7 @@ export default function LocationSection() {
     ? `tmap://route?goalname=티웨딩홀&goaly=${coords.lat}&goalx=${coords.lng}`
     : naviLinks.tmap;
   const kakaoLink   = coords
-    ? `kakaomap://route?ep=${coords.lng},${coords.lat}&ename=티웨딩홀&by=CAR`
+    ? `kakaomap://route?ep=${coords.lng},${coords.lat}&ename=티웨딩%20평택&by=CAR`
     : naviLinks.kakaoNavi;
   const controls = useAnimation();
   const triggered = useRef(false);
