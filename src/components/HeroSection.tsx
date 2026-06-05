@@ -40,7 +40,7 @@ export default function HeroSection({ phase }: Props) {
     <div
       style={{
         width: "100%",
-        height: "90vh",
+        height: "100vh",
         position: "relative",
         overflow: "hidden",
         flexShrink: 0,
