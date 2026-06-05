@@ -57,7 +57,7 @@ export default function HeroSection({ phase }: Props) {
         style={{
           position: "absolute",
           zIndex: 5,
-          top: "18.7cqw",
+          top: "14.7cqw",
           left: 0, right: 0,
           display: "flex",
           justifyContent: "center",
@@ -84,7 +84,7 @@ export default function HeroSection({ phase }: Props) {
         style={{
           position: "absolute",
           zIndex: 4,
-          top: "34.7cqw",
+          top: "25.7cqw",
           left: "50%",
           transform: "translateX(-50%)",
           width: "74.7cqw",

@@ -223,10 +223,10 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 600, fontSize: "5.3cqw", whiteSpace: "nowrap" }}>
+            <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 600, fontSize: "4.9cqw", whiteSpace: "nowrap" }}>
               {WEDDING.dateDisplay}
             </p>
-            <p style={{ margin: 0, marginTop: "6px", fontFamily: "'Cormorant Infant', serif", fontWeight: 400, fontSize: "3.7cqw", lineHeight: 1.2 }}>
+            <p style={{ margin: 0, marginTop: "6px", fontFamily: "'Cormorant Infant', serif", fontWeight: 400, fontSize: "3.3cqw", lineHeight: 1.2 }}>
               {WEDDING.tagline1}<br />{WEDDING.tagline2}
             </p>
           </motion.div>
