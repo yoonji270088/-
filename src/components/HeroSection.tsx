@@ -42,7 +42,8 @@ export default function HeroSection({ phase }: Props) {
         width: "100%",
         height: "100svh",
         position: "relative",
-        overflow: "hidden",
+        // clip: hidden과 달리 스크롤 컨테이너를 생성하지 않아 모바일 튕김 방지
+        overflow: "clip",
         flexShrink: 0,
         containerType: "inline-size",
         backgroundColor: "#ecece9",

@@ -21,12 +21,18 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
   const groupRef = useRef<HTMLDivElement>(null);
   const dateRef  = useRef<HTMLDivElement>(null);
 
-  // 스크롤 잠금
+  // 스크롤 잠금 — iOS Safari는 overflow:hidden을 무시하므로 touchmove도 차단
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.overflow = "hidden";
+
+    const prevent = (e: TouchEvent) => e.preventDefault();
+    // passive: false 필수 — 없으면 preventDefault()가 무시됨
+    document.addEventListener("touchmove", prevent, { passive: false });
+
     return () => {
       document.body.style.overflow = "";
+      document.removeEventListener("touchmove", prevent);
     };
   }, []);
 

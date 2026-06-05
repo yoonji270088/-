@@ -24,6 +24,15 @@ export default function App() {
     preloadImages([ASSETS.paperTexture, ASSETS.heroPhoto, ASSETS.envelope]);
   }, []);
 
+  // splash/transitioning 중 scroll 위치 강제 고정 (Android Chrome 대응)
+  useEffect(() => {
+    if (phase === "splash" || phase === "transitioning") {
+      const lockScroll = () => window.scrollTo(0, 0);
+      window.addEventListener("scroll", lockScroll);
+      return () => window.removeEventListener("scroll", lockScroll);
+    }
+  }, [phase]);
+
   const handleSplashComplete = () => {
     setPhase("transitioning");
     setTimeout(() => setPhase("done"), 1400);
@@ -37,7 +46,6 @@ export default function App() {
         width: "100%",
         minWidth: "320px",
         maxWidth: "430px",
-        // minHeight는 유지하되 overflow는 지정하지 않음 → body 스크롤만 사용
         minHeight: "100dvh",
         position: "relative",
         backgroundColor: "#ecece9",
