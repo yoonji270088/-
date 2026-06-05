@@ -92,9 +92,15 @@ export default function AccountSection() {
       content: {
         title: `${WEDDING.groomNameKo} ♥ ${WEDDING.brideNameKo} 결혼합니다`,
         description: `${WEDDING.dateKo}\n${WEDDING.venue}`,
-        imageUrl: ASSETS.heroPhoto,
+        imageUrl: `${window.location.origin}${ASSETS.heroPhoto}`,
         link: { mobileWebUrl: window.location.href, webUrl: window.location.href },
       },
+      buttons: [
+        {
+          title: "청첩장 보기",
+          link: { mobileWebUrl: window.location.href, webUrl: window.location.href },
+        },
+      ],
     });
   };
 

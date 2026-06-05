@@ -31,12 +31,12 @@ export const WEDDING = {
   },
   location: { placeId: "26796717", placeName: "티웨딩홀", address: "경기도 평택시 평택5로34번길 6-5" },
   naviLinks: {
-    // 카카오: place ID 기반 — 좌표 불필요
+    // 카카오: place ID로 장소 열기 → 앱 내 길찾기 버튼으로 현재위치→목적지 안내
     kakaoNavi:    "kakaomap://look?p=26796717",
     kakaoNaviWeb: "https://place.map.kakao.com/26796717",
-    // 티맵: 주소 기반
-    tmap:    "tmap://route?goalname=티웨딩홀&goaladdr=경기도%20평택시%20평택5로34번길%206-5",
-    tmapWeb: "https://www.tmap.co.kr/",
+    // 티맵: 주소 기반 경로 — 출발지 현재위치 자동, 도착지 티웨딩홀
+    tmap:    "tmap://route?goalname=티웨딩홀+평택&goaladdr=경기도+평택시+평택5로34번길+6-5",
+    tmapWeb: "https://tmap.life/route?goalname=%ED%8B%B0%EC%9B%A8%EB%94%A9%ED%99%80+%ED%8F%89%ED%83%9D&goaladdr=%EA%B2%BD%EA%B8%B0%EB%8F%84+%ED%8F%89%ED%83%9D%EC%8B%9C+%ED%8F%89%ED%83%9D5%EB%A1%9C34%EB%B2%88%EA%B8%B8+6-5",
     // 네이버: 장소명 검색
     naverMap:    "nmap://search?query=티웨딩+평택&appname=wedding",
     naverMapWeb: "https://map.naver.com/v5/search/티웨딩+평택",
