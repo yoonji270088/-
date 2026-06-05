@@ -40,6 +40,7 @@ export default function App() {
         width: "100%",
         minWidth: "320px",
         maxWidth: "430px",
+        margin: "0 auto",
         position: "relative",
         backgroundColor: "#ecece9",
         display: "flex",

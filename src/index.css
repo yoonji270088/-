@@ -8,14 +8,9 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  overflow-y: scroll;
+  overflow-y: scroll; /* 스크롤바 공간 항상 예약 → viewport 폭 변화 없음 */
   overflow-x: hidden;
   overscroll-behavior: none;
-  scrollbar-width: none; /* Firefox */
-}
-
-html::-webkit-scrollbar {
-  display: none; /* Chrome / Safari */
 }
 
 html, body {

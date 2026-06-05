@@ -127,10 +127,7 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
         top: 0, left: 0, right: 0, bottom: 0,
         zIndex: 20,
         overflow: "hidden",
-        // transitioning 중에도 pointer 차단 유지
         pointerEvents: isTransitioning ? "none" : "auto",
-        display: "flex",
-        justifyContent: "center",
       }}
     >
       {/* 배경 fade-out */}
@@ -148,6 +145,7 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
           maxWidth: "430px",
           minWidth: "320px",
           height: "100%",
+          margin: "0 auto",
           containerType: "inline-size",
         }}
       >
