@@ -23,15 +23,6 @@ export default function App() {
     preloadImages([ASSETS.paperTexture, ASSETS.heroPhoto, ASSETS.envelope]);
   }, []);
 
-  // splash/transitioning 중 스크롤 위치 고정 (Android Chrome 대응)
-  useEffect(() => {
-    if (phase === "splash" || phase === "transitioning") {
-      const lockScroll = () => window.scrollTo(0, 0);
-      window.addEventListener("scroll", lockScroll);
-      return () => window.removeEventListener("scroll", lockScroll);
-    }
-  }, [phase]);
-
   const handleSplashComplete = () => {
     setPhase("transitioning");
     setTimeout(() => setPhase("done"), 1400);
@@ -49,10 +40,10 @@ export default function App() {
         backgroundColor: "#ecece9",
         display: "flex",
         flexDirection: "column",
-        // overflow 지정 없음 → body 스크롤만 사용
       }}
     >
-      <HeroSection phase={phase} />
+      {/* phase prop 제거 — HeroSection은 커스텀 이벤트로만 제어 */}
+      <HeroSection />
 
       <div
         ref={sectionsRef}

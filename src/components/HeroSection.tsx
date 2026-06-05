@@ -1,40 +1,42 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { WEDDING } from "../constants/wedding";
 import { ASSETS } from "../constants/assets";
-import { Phase } from "../App";
 
-interface Props { phase: Phase; }
-
-export default function HeroSection({ phase }: Props) {
+// phase prop 완전 제거 — 외부 커스텀 이벤트로만 제어
+export default function HeroSection() {
   const photoControls = useAnimation();
-  const [textVisible, setTextVisible] = useState(false);
-
   const photoStarted = useRef(false);
+  const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if ((phase === "transitioning" || phase === "done") && !photoStarted.current) {
+    // SplashOverlay가 "hero-start" 이벤트를 발행하면 사진 애니메이션 시작
+    const onStart = () => {
+      if (photoStarted.current) return;
       photoStarted.current = true;
       photoControls.start({ opacity: 1, top: "6px", transition: { duration: 0.7, ease: "easeOut" } });
-      const t = setTimeout(() => {
+      setTimeout(() => {
         photoControls.start({
           top: "-60px",
           transition: { duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] },
         });
       }, 700);
-      return () => clearTimeout(t);
-    }
-  }, [phase, photoControls]);
+    };
 
-  useEffect(() => {
-    if (phase === "done") setTextVisible(true);
-  }, [phase]);
+    // SplashOverlay가 "hero-text-show" 이벤트를 발행하면 텍스트 표시
+    const onTextShow = () => {
+      if (textRef.current) {
+        textRef.current.style.visibility = "visible";
+      }
+    };
 
-  // 375px 기준 설계값 → vw 비율로 반응형 적용
-  // height:   180vw (675px @375) — clamp로 상하한
-  // names:    top 18.7vw (70px @375)
-  // group:    top 34.7vw (130px @375)
-  // photo:    left 6%
+    window.addEventListener("hero-start", onStart);
+    window.addEventListener("hero-text-show", onTextShow);
+    return () => {
+      window.removeEventListener("hero-start", onStart);
+      window.removeEventListener("hero-text-show", onTextShow);
+    };
+  }, [photoControls]);
 
   return (
     <div
@@ -42,7 +44,6 @@ export default function HeroSection({ phase }: Props) {
         width: "100%",
         height: "100svh",
         position: "relative",
-        // clip: hidden과 달리 스크롤 컨테이너를 생성하지 않아 모바일 튕김 방지
         overflow: "clip",
         flexShrink: 0,
         containerType: "inline-size",
@@ -52,87 +53,89 @@ export default function HeroSection({ phase }: Props) {
         backgroundPosition: "center",
       }}
     >
-      {/* Names — top 70px */}
-      <div
-        id="hero-names"
-        style={{
-          position: "absolute",
-          zIndex: 5,
-          top: "14.7cqw",
-          left: 0, right: 0,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "6px",
-          color: "#00226a",
-          visibility: textVisible ? "visible" : "hidden",
-        }}
-      >
-        <span style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 400, fontSize: "4cqw", whiteSpace: "nowrap" }}>
-          {WEDDING.groomNameEn}
-        </span>
-        <span style={{ fontFamily: "'Mrs Saint Delafield', cursive", fontSize: "5.6cqw", lineHeight: 1 }}>
-          &amp;
-        </span>
-        <span style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 400, fontSize: "4cqw", whiteSpace: "nowrap" }}>
-          {WEDDING.brideNameEn}
-        </span>
-      </div>
+      {/* 텍스트 3개를 하나의 ref div로 감싸서 리렌더 없이 visibility 토글 */}
+      <div ref={textRef} style={{ visibility: "hidden" }}>
 
-      {/* SAVE / The / DATE — top 130px */}
-      <div
-        id="hero-group"
-        style={{
-          position: "absolute",
-          zIndex: 4,
-          top: "25.7cqw",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "74.7cqw",
-          height: "41.3cqw",
-          visibility: textVisible ? "visible" : "hidden",
-        }}
-      >
-        {(["SAVE", "The", "DATE"] as const).map((word) => (
-          <p key={word} style={{
-            margin: 0, lineHeight: 1, whiteSpace: "nowrap",
-            position: "absolute", color: "#00226a",
-            fontFamily: word === "The" ? "'Mrs Saint Delafield', cursive" : "'Cormorant Upright', serif",
-            fontWeight: word === "The" ? undefined : 300,
-            fontSize: "14.9cqw",
-            ...(word === "SAVE" && { top: 0, left: 0 }),
-            ...(word === "The"  && { top: "37%", left: "39%" }),
-            ...(word === "DATE" && { top: "58%", right: 0 }),
-          }}>
-            {word}
+        {/* Names */}
+        <div
+          id="hero-names"
+          style={{
+            position: "absolute",
+            zIndex: 5,
+            top: "14.7cqw",
+            left: 0, right: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "6px",
+            color: "#00226a",
+          }}
+        >
+          <span style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 400, fontSize: "4cqw", whiteSpace: "nowrap" }}>
+            {WEDDING.groomNameEn}
+          </span>
+          <span style={{ fontFamily: "'Mrs Saint Delafield', cursive", fontSize: "5.6cqw", lineHeight: 1 }}>
+            &amp;
+          </span>
+          <span style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 400, fontSize: "4cqw", whiteSpace: "nowrap" }}>
+            {WEDDING.brideNameEn}
+          </span>
+        </div>
+
+        {/* SAVE / The / DATE */}
+        <div
+          id="hero-group"
+          style={{
+            position: "absolute",
+            zIndex: 4,
+            top: "25.7cqw",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "74.7cqw",
+            height: "41.3cqw",
+          }}
+        >
+          {(["SAVE", "The", "DATE"] as const).map((word) => (
+            <p key={word} style={{
+              margin: 0, lineHeight: 1, whiteSpace: "nowrap",
+              position: "absolute", color: "#00226a",
+              fontFamily: word === "The" ? "'Mrs Saint Delafield', cursive" : "'Cormorant Upright', serif",
+              fontWeight: word === "The" ? undefined : 300,
+              fontSize: "14.9cqw",
+              ...(word === "SAVE" && { top: 0, left: 0 }),
+              ...(word === "The"  && { top: "37%", left: "39%" }),
+              ...(word === "DATE" && { top: "58%", right: 0 }),
+            }}>
+              {word}
+            </p>
+          ))}
+        </div>
+
+        {/* Date + Tagline */}
+        <div
+          id="hero-date"
+          style={{
+            position: "absolute",
+            zIndex: 4,
+            bottom: "10.9cqw",
+            left: 0, right: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "6px",
+            textAlign: "center",
+            color: "#00226a",
+            paddingInline: "16px",
+          }}
+        >
+          <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 600, fontSize: "5.3cqw", whiteSpace: "nowrap" }}>
+            {WEDDING.dateDisplay}
           </p>
-        ))}
-      </div>
+          <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 400, fontSize: "3.7cqw", lineHeight: 1.2 }}>
+            {WEDDING.tagline1}<br />{WEDDING.tagline2}
+          </p>
+        </div>
 
-      {/* Date + Tagline — bottom 41px */}
-      <div
-        id="hero-date"
-        style={{
-          position: "absolute",
-          zIndex: 4,
-          bottom: "10.9cqw",
-          left: 0, right: 0,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "6px",
-          textAlign: "center",
-          color: "#00226a",
-          paddingInline: "16px",
-          visibility: textVisible ? "visible" : "hidden",
-        }}
-      >
-        <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 600, fontSize: "5.3cqw", whiteSpace: "nowrap" }}>
-          {WEDDING.dateDisplay}
-        </p>
-        <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 400, fontSize: "3.7cqw", lineHeight: 1.2 }}>
-          {WEDDING.tagline1}<br />{WEDDING.tagline2}
-        </p>
       </div>
 
       {/* Photo + Envelope */}

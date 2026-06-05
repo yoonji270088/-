@@ -21,15 +21,12 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
   const groupRef = useRef<HTMLDivElement>(null);
   const dateRef  = useRef<HTMLDivElement>(null);
 
-  // 스크롤 잠금 — iOS Safari는 overflow:hidden을 무시하므로 touchmove도 차단
+  // 스크롤 잠금 — iOS Safari touchmove 차단
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.overflow = "hidden";
-
     const prevent = (e: TouchEvent) => e.preventDefault();
-    // passive: false 필수 — 없으면 preventDefault()가 무시됨
     document.addEventListener("touchmove", prevent, { passive: false });
-
     return () => {
       document.body.style.overflow = "";
       document.removeEventListener("touchmove", prevent);
@@ -42,12 +39,16 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
     dateCtrl.start({ opacity: 1, transition: { duration: 0.6, delay: 0.3 } });
   }, [namesCtrl, dateCtrl]);
 
-  // stagger
+  // stagger + onComplete
   useEffect(() => {
     const t1 = setTimeout(() => setShowSave(true), 300);
     const t2 = setTimeout(() => setShowThe(true), 800);
     const t3 = setTimeout(() => setShowDate(true), 1300);
-    const t4 = setTimeout(() => onComplete(), 3500);
+    const t4 = setTimeout(() => {
+      // 사진 애니메이션 시작 이벤트
+      window.dispatchEvent(new Event("hero-start"));
+      onComplete();
+    }, 3500);
     return () => [t1, t2, t3, t4].forEach(clearTimeout);
   }, [onComplete]);
 
@@ -64,7 +65,6 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
     const dur = 1.3;
     const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
 
-    // 각 ref 요소 기준으로 delta 계산 (wrapper 기준이 아닌 실제 요소 기준)
     const namesR = namesRef.current.getBoundingClientRect();
     const groupR = groupRef.current.getBoundingClientRect();
     const dateR  = dateRef.current.getBoundingClientRect();
@@ -84,6 +84,12 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
       (p as HTMLElement).style.transition = "color 1.1s ease-in-out";
       (p as HTMLElement).style.color = "#00226a";
     });
+
+    // 전환 완료 후 Hero 텍스트 표시 이벤트 (1.3s transition 끝난 뒤)
+    const t = setTimeout(() => {
+      window.dispatchEvent(new Event("hero-text-show"));
+    }, dur * 1000);
+    return () => clearTimeout(t);
   }, [phase, namesCtrl, groupCtrl, dateCtrl]);
 
   const isTransitioning = phase === "transitioning";
@@ -101,14 +107,12 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
         justifyContent: "center",
       }}
     >
-      {/* 네이비 배경 */}
       <motion.div
         animate={{ opacity: isTransitioning ? 0 : 1 }}
         transition={{ duration: 1.3, ease: "easeInOut" }}
         style={{ position: "absolute", inset: 0, backgroundColor: "#041438" }}
       />
 
-      {/* 내부 컨테이너 */}
       <div
         style={{
           position: "relative",
@@ -119,7 +123,6 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
           containerType: "inline-size",
         }}
       >
-
         {/* Names */}
         <motion.div
           ref={namesRef}
@@ -137,76 +140,47 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
             zIndex: 2,
           }}
         >
-          <motion.span
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 300, fontSize: "4cqw", whiteSpace: "nowrap" }}
-          >
+          <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.1 }}
+            style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 300, fontSize: "4cqw", whiteSpace: "nowrap" }}>
             {WEDDING.groomNameEn}
           </motion.span>
-          <motion.span
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            style={{ fontFamily: "'Mrs Saint Delafield', cursive", fontSize: "5.6cqw", lineHeight: 1 }}
-          >
+          <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.1 }}
+            style={{ fontFamily: "'Mrs Saint Delafield', cursive", fontSize: "5.6cqw", lineHeight: 1 }}>
             &amp;
           </motion.span>
-          <motion.span
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 300, fontSize: "4cqw", whiteSpace: "nowrap" }}
-          >
+          <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.1 }}
+            style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 300, fontSize: "4cqw", whiteSpace: "nowrap" }}>
             {WEDDING.brideNameEn}
           </motion.span>
         </motion.div>
 
-        {/* SAVE / The / DATE — groupCtrl을 wrapper가 아닌 실제 요소(groupRef)에 직접 적용 */}
-        <div
-          style={{
-            position: "absolute",
-            top: "60cqw",
-            left: 0, right: 0,
-            display: "flex",
-            justifyContent: "center",
-            zIndex: 2,
-          }}
-        >
+        {/* SAVE / The / DATE */}
+        <div style={{ position: "absolute", top: "60cqw", left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 2 }}>
           <motion.div
             ref={groupRef}
             animate={groupCtrl}
-            style={{
-              position: "relative",
-              width: "74.7cqw",
-              height: "41.3cqw",
-              flexShrink: 0,
-            }}
+            style={{ position: "relative", width: "74.7cqw", height: "41.3cqw", flexShrink: 0 }}
           >
             {showSave && (
-              <motion.p
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}
                 style={{ margin: 0, lineHeight: 1, whiteSpace: "nowrap", position: "absolute",
-                  top: 0, left: 0, color: "#dddcbc",
-                  fontFamily: "'Cormorant Upright', serif", fontWeight: 300, fontSize }}
-              >SAVE</motion.p>
+                  top: 0, left: 0, color: "#dddcbc", fontFamily: "'Cormorant Upright', serif", fontWeight: 300, fontSize }}>
+                SAVE
+              </motion.p>
             )}
             {showThe && (
-              <motion.p
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}
                 style={{ margin: 0, lineHeight: 1, whiteSpace: "nowrap", position: "absolute",
-                  top: "37%", left: "39%", color: "#dddcbc",
-                  fontFamily: "'Mrs Saint Delafield', cursive", fontSize }}
-              >The</motion.p>
+                  top: "37%", left: "39%", color: "#dddcbc", fontFamily: "'Mrs Saint Delafield', cursive", fontSize }}>
+                The
+              </motion.p>
             )}
             {showDate && (
-              <motion.p
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}
                 style={{ margin: 0, lineHeight: 1, whiteSpace: "nowrap", position: "absolute",
-                  top: "58%", right: 0, color: "#dddcbc",
-                  fontFamily: "'Cormorant Upright', serif", fontWeight: 300, fontSize }}
-              >DATE</motion.p>
+                  top: "58%", right: 0, color: "#dddcbc", fontFamily: "'Cormorant Upright', serif", fontWeight: 300, fontSize }}>
+                DATE
+              </motion.p>
             )}
           </motion.div>
         </div>
@@ -230,17 +204,12 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
             zIndex: 2,
           }}
         >
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 600, fontSize: "4.9cqw", whiteSpace: "nowrap" }}>
-              {WEDDING.dateDisplay}
-            </p>
-            <p style={{ margin: 0, marginTop: "6px", fontFamily: "'Cormorant Infant', serif", fontWeight: 400, fontSize: "3.3cqw", lineHeight: 1.2 }}>
-              {WEDDING.tagline1}<br />{WEDDING.tagline2}
-            </p>
-          </motion.div>
+          <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 600, fontSize: "4.9cqw", whiteSpace: "nowrap" }}>
+            {WEDDING.dateDisplay}
+          </p>
+          <p style={{ margin: 0, marginTop: "6px", fontFamily: "'Cormorant Infant', serif", fontWeight: 400, fontSize: "3.3cqw", lineHeight: 1.2 }}>
+            {WEDDING.tagline1}<br />{WEDDING.tagline2}
+          </p>
         </motion.div>
 
       </div>
