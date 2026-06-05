@@ -1,10 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { WEDDING } from "../constants/wedding";
 
 declare global { interface Window { kakao: any; } }
 
-function KakaoMap() {
+function KakaoMap({ onCoords }: { onCoords?: (lat: number, lng: number) => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const initialized  = useRef(false);
   const key     = import.meta.env.VITE_KAKAO_MAP_KEY as string | undefined;
@@ -22,19 +22,21 @@ function KakaoMap() {
       window.kakao.maps.load(() => {
         if (!containerRef.current) return;
 
-        // Places API로 장소 ID 검색 → 카카오가 제공하는 실제 WGS84 좌표 사용
         const ps = new window.kakao.maps.services.Places();
         ps.keywordSearch(
           name,
           (results: any[], status: string) => {
             if (status !== window.kakao.maps.services.Status.OK || !containerRef.current) return;
 
-            // ID가 일치하는 결과 우선, 없으면 첫 번째
             const place = results.find((r: any) => r.id === placeId) ?? results[0];
             if (!place) return;
 
             const lat = parseFloat(place.y);
             const lng = parseFloat(place.x);
+
+            // 부모에 좌표 전달 → 네비 링크에 사용
+            onCoords?.(lat, lng);
+
             const center = new window.kakao.maps.LatLng(lat, lng);
             const map = new window.kakao.maps.Map(containerRef.current, { center, level: 4 });
             new window.kakao.maps.Marker({ map, position: center, title: place.place_name });
@@ -101,12 +103,18 @@ function NaviBtn({ label, deepLink, webLink }: { label: string; deepLink: string
   return (
     <button
       onClick={() => {
-        const iframe = document.createElement("iframe");
-        iframe.style.display = "none";
-        iframe.src = deepLink;
-        document.body.appendChild(iframe);
-        setTimeout(() => document.body.removeChild(iframe), 1500);
-        setTimeout(() => window.open(webLink, "_blank"), 1500);
+        // 앱 열림 여부를 visibilitychange로 감지
+        // → 앱이 열리면 fallback 취소, 앱 없으면 웹으로 이동
+        let appOpened = false;
+        const onHide = () => { appOpened = true; };
+        document.addEventListener("visibilitychange", onHide, { once: true });
+
+        window.location.href = deepLink;
+
+        setTimeout(() => {
+          document.removeEventListener("visibilitychange", onHide);
+          if (!appOpened) window.open(webLink, "_blank");
+        }, 1800);
       }}
       style={{
         flex: 1, height: "34px",
@@ -124,6 +132,15 @@ function NaviBtn({ label, deepLink, webLink }: { label: string; deepLink: string
 export default function LocationSection() {
   const { naviLinks } = WEDDING;
   const ref = useRef<HTMLDivElement>(null);
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+
+  // Places API 좌표 기반 링크 (있으면 우선 사용)
+  const tmapLink    = coords
+    ? `tmap://route?goalname=티웨딩홀&goaly=${coords.lat}&goalx=${coords.lng}`
+    : naviLinks.tmap;
+  const kakaoLink   = coords
+    ? `kakaomap://route?ep=${coords.lng},${coords.lat}&ename=티웨딩홀&by=CAR`
+    : naviLinks.kakaoNavi;
   const controls = useAnimation();
   const triggered = useRef(false);
 
@@ -164,11 +181,11 @@ export default function LocationSection() {
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", width: "100%", gap: "10px" }}>
-        <KakaoMap />
+        <KakaoMap onCoords={(lat, lng) => setCoords({ lat, lng })} />
         <div style={{ display: "flex", gap: "6px", width: "100%" }}>
-          <NaviBtn label="티맵"       deepLink={naviLinks.tmap}      webLink={naviLinks.tmapWeb} />
-          <NaviBtn label="카카오내비"  deepLink={naviLinks.kakaoNavi} webLink={naviLinks.kakaoNaviWeb} />
-          <NaviBtn label="네이버지도"  deepLink={naviLinks.naverMap}  webLink={naviLinks.naverMapWeb} />
+          <NaviBtn label="티맵"       deepLink={tmapLink}           webLink={naviLinks.tmapWeb} />
+          <NaviBtn label="카카오내비"  deepLink={kakaoLink}          webLink={naviLinks.kakaoNaviWeb} />
+          <NaviBtn label="네이버지도"  deepLink={naviLinks.naverMap} webLink={naviLinks.naverMapWeb} />
         </div>
       </div>
 
