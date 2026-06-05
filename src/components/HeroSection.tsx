@@ -128,10 +128,10 @@ export default function HeroSection() {
             paddingInline: "16px",
           }}
         >
-          <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 600, fontSize: "5.3cqw", whiteSpace: "nowrap" }}>
+          <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 600, fontSize: "min(5.3vw, 22.8px)", whiteSpace: "nowrap" }}>
             {WEDDING.dateDisplay}
           </p>
-          <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 400, fontSize: "3.7cqw", lineHeight: 1.2 }}>
+          <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 400, fontSize: "min(3.7vw, 15.9px)", lineHeight: 1.2 }}>
             {WEDDING.tagline1}<br />{WEDDING.tagline2}
           </p>
         </div>
