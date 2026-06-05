@@ -163,7 +163,7 @@ export default function HeroSection() {
           position: "absolute",
           zIndex: 4,
           // vw 기준 고정값 (430px max 기준 10.9cqw ≈ 10.9vw)
-          bottom: "min(10.9vw, 46.9px)",
+          bottom: "clamp(36px, 6vh, 60px)",
           left: 0, right: 0,
           display: "flex",
           flexDirection: "column",
