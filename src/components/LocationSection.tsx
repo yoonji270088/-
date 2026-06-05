@@ -185,7 +185,7 @@ export default function LocationSection() {
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           <p style={{ fontFamily: "'Pretendard', sans-serif", fontWeight: 600, fontSize: "clamp(13px, 4vw, 16px)", color: "#000", margin: 0 }}>주차장 안내</p>
           <ul style={{ margin: 0, paddingLeft: "18px", display: "flex", flexDirection: "column", gap: "4px" }}>
-            {["티웨딩홀 지하 4층 ~ 지상 3층", "평택시청 주차장", "배미공원 지하 공영주차장", "공설운동장 주차장"].map((item) => (
+            {["・ 티웨딩홀 지하 4층 ~ 지상 3층", "・ 평택시청 주차장", "・ 배미공원 지하 공영주차장", "・ 공설운동장 주차장"].map((item) => (
               <li key={item} style={{ fontFamily: "'Pretendard', sans-serif", fontWeight: 400, fontSize: "clamp(12px, 3.5vw, 14px)", color: "#323232", opacity: 0.7, lineHeight: 1.7 }}>{item}</li>
             ))}
           </ul>

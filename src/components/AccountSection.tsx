@@ -122,7 +122,7 @@ export default function AccountSection() {
           <p style={{ fontFamily: "'Cormorant Upright', serif", fontWeight: 400, fontSize: "14px", color: "#334e88", opacity: 0.8, textAlign: "center", margin: 0 }}>Account</p>
           <p style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 600, fontSize: "clamp(14px, 4.3vw, 18px)", color: "#00226a", textAlign: "center", margin: 0 }}>마음 전하실 곳</p>
         </div>
-        <p style={{ fontFamily: "'Pretendard', sans-serif", fontWeight: 400, fontSize: "clamp(12px, 3.7vw, 15px)", color: "#303030", opacity: 0.8, lineHeight: 1.8, textAlign: "center", maxWidth: "280px", margin: 0 }}>
+        <p style={{ fontFamily: "'Pretendard', sans-serif", fontWeight: 400, fontSize: "14px", color: "#303030", opacity: 0.8, lineHeight: 1.8, textAlign: "center", maxWidth: "280px", margin: 0 }}>
           멀리서도 축하의 마음을<br />전하고 싶으신 분들을 위해<br />계좌번호를 안내드립니다.<br /><br />
           소중한 축하를 보내주셔서 감사드리며,<br />따뜻한 마음에 깊이 감사드립니다.
         </p>
@@ -146,7 +146,7 @@ export default function AccountSection() {
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
           <button onClick={handleLinkShare} style={{ width: "60px", height: "60px", borderRadius: "50%", backgroundColor: "#efe7d7", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <img src={ASSETS.linkIcon} alt="링크 공유" style={{ width: "20px", height: "20px" }} />
+            <img src={ASSETS.linkIcon} alt="링크 공유" style={{ width: "28px", height: "28px" }} />
           </button>
           <p style={{ fontFamily: "'Pretendard', sans-serif", fontWeight: 400, fontSize: "13px", color: "#766b52", opacity: 0.8, margin: 0 }}>Link</p>
         </div>

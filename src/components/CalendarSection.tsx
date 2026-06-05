@@ -45,17 +45,17 @@ export default function CalendarSection() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "clamp(14px, 4vw, 20px)",
+        gap: "40px",
       }}
     >
       <div style={{ textAlign: "center", color: "white" }}>
         <p style={{ fontFamily: "'Cormorant Infant', serif", fontWeight: 500, fontSize: "clamp(22px, 7.5vw, 30px)", lineHeight: 1.5, opacity: 0.85, margin: 0 }}>
           {WEDDING.dateNumeric}
         </p>
-        <p style={{ fontFamily: "'Pretendard', sans-serif", fontWeight: 300, fontSize: "clamp(12px, 3.7vw, 15px)", lineHeight: 1.7, opacity: 0.6, margin: 0 }}>
+        <p style={{ fontFamily: "'Pretendard', sans-serif", fontWeight: 400, fontSize: "clamp(12px, 3.7vw, 15px)", lineHeight: 1.7, opacity: 0.6, margin: 0 }}>
           {WEDDING.dateKo}
         </p>
-        <p style={{ fontFamily: "'Pretendard', sans-serif", fontWeight: 300, fontSize: "clamp(12px, 3.7vw, 15px)", lineHeight: 1.7, opacity: 0.6, margin: 0 }}>
+        <p style={{ fontFamily: "'Pretendard', sans-serif", fontWeight: 400, fontSize: "clamp(12px, 3.7vw, 15px)", lineHeight: 1.7, opacity: 0.6, margin: 0 }}>
           {WEDDING.venueFloor}
         </p>
       </div>
