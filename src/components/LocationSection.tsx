@@ -106,9 +106,9 @@ function NaviBtn({ label, deepLink, webLink }: { label: string; deepLink: string
         const isKakaoInApp = /KAKAOTALK/i.test(navigator.userAgent);
 
         if (isKakaoInApp) {
-          // iOS 카카오 인앱브라우저: tmap://, kakaomap:// 커스텀 스킴은
-          // 페이지를 이동시키지 않고 앱만 실행 → 탭 유지됨
-          window.location.href = deepLink;
+          // 카카오 인앱브라우저: 웹 먼저 열기 → 인앱브라우저 탭 유지
+          // 각 웹페이지(카카오맵/네이버/티맵)에서 앱으로 연결됨
+          window.open(webLink, "_blank");
           return;
         }
 
