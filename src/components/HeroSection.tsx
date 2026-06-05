@@ -84,8 +84,7 @@ export default function HeroSection({ phase }: Props) {
           position: "absolute",
           zIndex: 4,
           top: "25.7cqw",
-          left: "50%",
-          transform: "translateX(-50%)",
+          left: "calc(50% - 37.35cqw)", /* transform 대신 calc로 가운데 정렬 */
           width: "74.7cqw",
           height: "41.3cqw",
           visibility: "hidden",
@@ -146,8 +145,8 @@ export default function HeroSection({ phase }: Props) {
           animate={photoControls}
           style={{
             position: "absolute",
-            left: "50%",
-            transform: "translateX(-50%)",
+            left: 0, right: 0,
+            margin: "0 auto", /* transform 대신 margin으로 가운데 정렬 */
             top: "0%",
             opacity: 0,
             width: "88%", maxWidth: "330px",
