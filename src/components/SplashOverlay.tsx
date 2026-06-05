@@ -27,12 +27,10 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
   // 스크롤 잠금
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.documentElement.style.overflowY = "hidden";
     document.body.style.overflow = "hidden";
     const prevent = (e: TouchEvent) => e.preventDefault();
     document.addEventListener("touchmove", prevent, { passive: false });
     return () => {
-      document.documentElement.style.overflowY = "scroll";
       document.body.style.overflow = "";
       document.removeEventListener("touchmove", prevent);
     };

@@ -11,6 +11,11 @@ html {
   overflow-y: scroll;
   overflow-x: hidden;
   overscroll-behavior: none;
+  scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome / Safari */
 }
 
 html, body {
