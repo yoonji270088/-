@@ -29,13 +29,13 @@ export const WEDDING = {
       { name: "김용선", bank: "농협은행",   number: "100104-52-180328" },
     ],
   },
-  location: { lat: 37.0077, lng: 127.0885, placeName: "티웨딩 평택" },
+  location: { lat: 37.0077, lng: 127.0885, placeName: "티웨딩홀", address: "경기 평택시 평택5로34번길 6-5" },
   naviLinks: {
-    tmap: "tmap://route?goalname=티웨딩평택&goaly=37.0077&goalx=127.0885",
-    kakaoNavi: "kakaomap://route?ep=127.0885,37.0077&by=CAR",
-    naverMap: "nmap://route/public/goal?dlat=37.0077&dlng=127.0885&dname=티웨딩평택&appname=wedding",
+    tmap: "tmap://route?goalname=티웨딩홀+평택&goaly=37.0077&goalx=127.0885",
+    kakaoNavi: "kakaomap://route?ep=127.0885,37.0077&ename=티웨딩홀&by=CAR",
+    naverMap: "nmap://route/public/goal?dlat=37.0077&dlng=127.0885&dname=티웨딩홀+평택&appname=wedding",
     tmapWeb: "https://www.tmap.co.kr/",
-    kakaoNaviWeb: "https://map.kakao.com/",
+    kakaoNaviWeb: "https://map.kakao.com/link/to/티웨딩홀,37.0077,127.0885",
     naverMapWeb: "https://map.naver.com/v5/search/티웨딩+평택",
   },
 };

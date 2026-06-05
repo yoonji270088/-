@@ -10,9 +10,10 @@ function KakaoMap() {
   const key = import.meta.env.VITE_KAKAO_MAP_KEY as string | undefined;
   console.log("KAKAO MAP KEY:", key);
 
-  const lat  = WEDDING.location.lat;
-  const lng  = WEDDING.location.lng;
-  const name = WEDDING.location.placeName;
+  const lat     = WEDDING.location.lat;
+  const lng     = WEDDING.location.lng;
+  const name    = WEDDING.location.placeName;
+  const address = WEDDING.location.address;
 
   useEffect(() => {
     if (!key) return; // fallback iframe 사용
@@ -26,7 +27,7 @@ function KakaoMap() {
         const map = new window.kakao.maps.Map(containerRef.current, { center, level: 4 });
         const marker = new window.kakao.maps.Marker({ map, position: center, title: name });
         const infowindow = new window.kakao.maps.InfoWindow({
-          content: `<div style="padding:6px 10px;font-size:13px;font-family:'Pretendard',sans-serif;white-space:nowrap;">${name}</div>`,
+          content: `<div style="padding:6px 10px;font-family:'Pretendard',sans-serif;"><div style="font-size:13px;font-weight:600;white-space:nowrap;">${name}</div><div style="font-size:11px;color:#666;margin-top:2px;white-space:nowrap;">${address}</div></div>`,
         });
         infowindow.open(map, marker);
       });
