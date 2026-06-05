@@ -6,8 +6,6 @@ import { ASSETS } from "../constants/assets";
 export default function HeroSection() {
   const photoControls = useAnimation();
   const photoStarted = useRef(false);
-  const textRef = useRef<HTMLDivElement>(null);
-  const dateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onStart = () => {
@@ -22,21 +20,11 @@ export default function HeroSection() {
       }, 700);
     };
 
-    const onTextShow = () => {
-      if (textRef.current) textRef.current.style.visibility = "visible";
-      if (dateRef.current) dateRef.current.style.visibility = "visible";
-    };
-
     window.addEventListener("hero-start", onStart);
-    window.addEventListener("hero-text-show", onTextShow);
-    return () => {
-      window.removeEventListener("hero-start", onStart);
-      window.removeEventListener("hero-text-show", onTextShow);
-    };
+    return () => window.removeEventListener("hero-start", onStart);
   }, [photoControls]);
 
   return (
-    // 외부 wrapper: containerType 없음 → cqw 영향 없음. position:relative로 내부 absolute 기준
     <div
       style={{
         width: "100%",
@@ -50,7 +38,6 @@ export default function HeroSection() {
         backgroundPosition: "center",
       }}
     >
-      {/* containerType은 이 inner div에만 — Names/Group/Photo에만 cqw 적용 */}
       <div
         style={{
           position: "absolute",
@@ -58,64 +45,59 @@ export default function HeroSection() {
           containerType: "inline-size",
         }}
       >
-        {/* Names + SAVE/DATE: visibility 토글 */}
-        <div ref={textRef} style={{ visibility: "hidden" }}>
+        {/* Names */}
+        <div
+          id="hero-names"
+          style={{
+            position: "absolute",
+            zIndex: 5,
+            top: "14.7cqw",
+            left: 0, right: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "6px",
+            color: "#00226a",
+          }}
+        >
+          <span style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 400, fontSize: "4cqw", whiteSpace: "nowrap" }}>
+            {WEDDING.groomNameEn}
+          </span>
+          <span style={{ fontFamily: "'Mrs Saint Delafield', cursive", fontSize: "5.6cqw", lineHeight: 1 }}>
+            &amp;
+          </span>
+          <span style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 400, fontSize: "4cqw", whiteSpace: "nowrap" }}>
+            {WEDDING.brideNameEn}
+          </span>
+        </div>
 
-          {/* Names */}
-          <div
-            id="hero-names"
-            style={{
-              position: "absolute",
-              zIndex: 5,
-              top: "14.7cqw",
-              left: 0, right: 0,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "6px",
-              color: "#00226a",
-            }}
-          >
-            <span style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 400, fontSize: "4cqw", whiteSpace: "nowrap" }}>
-              {WEDDING.groomNameEn}
-            </span>
-            <span style={{ fontFamily: "'Mrs Saint Delafield', cursive", fontSize: "5.6cqw", lineHeight: 1 }}>
-              &amp;
-            </span>
-            <span style={{ fontFamily: "'Noto Serif KR', serif", fontWeight: 400, fontSize: "4cqw", whiteSpace: "nowrap" }}>
-              {WEDDING.brideNameEn}
-            </span>
-          </div>
-
-          {/* SAVE / The / DATE */}
-          <div
-            id="hero-group"
-            style={{
-              position: "absolute",
-              zIndex: 4,
-              top: "25.7cqw",
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "74.7cqw",
-              height: "41.3cqw",
-            }}
-          >
-            {(["SAVE", "The", "DATE"] as const).map((word) => (
-              <p key={word} style={{
-                margin: 0, lineHeight: 1, whiteSpace: "nowrap",
-                position: "absolute", color: "#00226a",
-                fontFamily: word === "The" ? "'Mrs Saint Delafield', cursive" : "'Cormorant Upright', serif",
-                fontWeight: word === "The" ? undefined : 300,
-                fontSize: "14.9cqw",
-                ...(word === "SAVE" && { top: 0, left: 0 }),
-                ...(word === "The"  && { top: "37%", left: "39%" }),
-                ...(word === "DATE" && { top: "58%", right: 0 }),
-              }}>
-                {word}
-              </p>
-            ))}
-          </div>
-
+        {/* SAVE / The / DATE */}
+        <div
+          id="hero-group"
+          style={{
+            position: "absolute",
+            zIndex: 4,
+            top: "25.7cqw",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "74.7cqw",
+            height: "41.3cqw",
+          }}
+        >
+          {(["SAVE", "The", "DATE"] as const).map((word) => (
+            <p key={word} style={{
+              margin: 0, lineHeight: 1, whiteSpace: "nowrap",
+              position: "absolute", color: "#00226a",
+              fontFamily: word === "The" ? "'Mrs Saint Delafield', cursive" : "'Cormorant Upright', serif",
+              fontWeight: word === "The" ? undefined : 300,
+              fontSize: "14.9cqw",
+              ...(word === "SAVE" && { top: 0, left: 0 }),
+              ...(word === "The"  && { top: "37%", left: "39%" }),
+              ...(word === "DATE" && { top: "58%", right: 0 }),
+            }}>
+              {word}
+            </p>
+          ))}
         </div>
 
         {/* Photo + Envelope */}
@@ -154,16 +136,13 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Date + Tagline: containerType 밖 — cqw 재계산 영향 완전 차단 */}
+      {/* Date + Tagline: containerType 밖 */}
       <div
         id="hero-date"
-        ref={dateRef}
         style={{
-          visibility: "hidden",
           position: "absolute",
           zIndex: 4,
-          // vw 기준 고정값 (430px max 기준 10.9cqw ≈ 10.9vw)
-          bottom: "clamp(36px, 6vh, 60px)",
+          bottom: "10.9cqw",
           left: 0, right: 0,
           display: "flex",
           flexDirection: "column",

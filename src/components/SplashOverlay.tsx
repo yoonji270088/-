@@ -49,7 +49,6 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
       window.dispatchEvent(new Event("hero-start"));
       onComplete();
     }, 3500);
-    return () => [t1, t2, t3, t4].forEach(clearTimeout);
   }, [onComplete]);
 
   // transitioning → Hero 위치로 이동
@@ -86,10 +85,6 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
     });
 
     // 전환 완료 후 Hero 텍스트 표시 이벤트 (1.3s transition 끝난 뒤)
-    const t = setTimeout(() => {
-      window.dispatchEvent(new Event("hero-text-show"));
-    }, 1500);
-    return () => clearTimeout(t);
   }, [phase, namesCtrl, groupCtrl, dateCtrl]);
 
   const isTransitioning = phase === "transitioning";
