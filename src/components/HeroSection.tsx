@@ -39,7 +39,7 @@ export default function HeroSection({ phase }: Props) {
     <div
       style={{
         width: "100%",
-        height: "100svh",
+        height: "var(--hero-h, 100svh)", /* iOS: 초기 고정 높이 사용 */
         position: "relative",
         overflow: "clip", /* hidden 대신 clip — 스크롤 컨텍스트 생성 안 함 → 스크롤 중 요소 위치 고정 */
         flexShrink: 0,

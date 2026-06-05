@@ -22,6 +22,9 @@ export default function App() {
   useEffect(() => {
     window.scrollTo(0, 0);
     preloadImages([ASSETS.paperTexture, ASSETS.heroPhoto, ASSETS.envelope]);
+    // iOS Safari: 스크롤 시 URL 바가 숨겨지면서 viewport 높이가 변하는 문제 해결
+    // 초기 높이를 CSS 변수로 고정 → 스크롤해도 hero 높이 불변
+    document.documentElement.style.setProperty('--hero-h', `${window.innerHeight}px`);
   }, []);
 
   const handleSplashComplete = useCallback(() => {

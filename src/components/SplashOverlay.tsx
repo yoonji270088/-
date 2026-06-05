@@ -132,7 +132,7 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
       style={{
         position: "absolute",
         top: 0, left: 0, right: 0,
-        height: "100svh",
+        height: "var(--hero-h, 100svh)",
         zIndex: 20,
         overflow: "hidden",
         pointerEvents: isTransitioning ? "none" : "auto",
