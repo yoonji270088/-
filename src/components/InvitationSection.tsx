@@ -31,7 +31,7 @@ export default function InvitationSection() {
           <p style={{
             fontFamily: "'Pretendard', sans-serif", fontWeight: 400, fontSize: "14px",
             color: "#303030", opacity: 0.8, lineHeight: 1.6, margin: 0,
-            textAlign: "center", whiteSpace: "pre-wrap",
+            textAlign: "center", whiteSpace: "pre-wrap", wordBreak: "keep-all",
           }}>
             {"저희의 결혼 소식이\n부담스럽지 않게 다가가길 바라며,\n편한 마음으로 오셔서\n축하해주시면 감사하겠습니다.\n\n혹여 참석이 어려우시더라도 부담 갖지 마시고,\n마음으로 축하해주시면 감사하겠습니다."}
           </p>

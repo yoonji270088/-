@@ -167,7 +167,7 @@ export default function LocationSection() {
         <KakaoMap />
         <div style={{ display: "flex", gap: "6px", width: "100%" }}>
           <NaviBtn label="티맵"       deepLink={naviLinks.tmap}      webLink={naviLinks.tmapWeb} />
-          <NaviBtn label="카카오맵"  deepLink={naviLinks.kakaoNavi} webLink={naviLinks.kakaoNaviWeb} />
+          <NaviBtn label="카카오내비"  deepLink={naviLinks.kakaoNavi} webLink={naviLinks.kakaoNaviWeb} />
           <NaviBtn label="네이버지도"  deepLink={naviLinks.naverMap}  webLink={naviLinks.naverMapWeb} />
         </div>
       </div>
