@@ -13,7 +13,7 @@ export default function InvitationSection() {
         width: "100%",
         paddingTop: "120px",
         paddingBottom: "100px",
-        paddingInline: "59px",
+        paddingInline: "clamp(20px, 6vw, 40px)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
