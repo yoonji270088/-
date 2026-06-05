@@ -13,6 +13,14 @@ html, body {
   width: 100%;
   overflow-x: hidden;
   overscroll-behavior: none;
+  scrollbar-width: none; /* Firefox */
+}
+
+::-webkit-scrollbar {
+  display: none; /* Chrome / Safari */
+}
+
+html, body {
   background-color: #c8c5bc;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   -webkit-font-smoothing: antialiased;
