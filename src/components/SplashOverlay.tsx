@@ -158,7 +158,7 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
         <div
           style={{
             position: "absolute",
-            top: "56vh",
+            top: "30vh",
             left: 0, right: 0,
             display: "flex",
             justifyContent: "center",
