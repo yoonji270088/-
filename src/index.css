@@ -7,13 +7,18 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+html {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   overflow-x: hidden;
   overscroll-behavior: none;
-  scrollbar-gutter: stable;
   background-color: #c8c5bc;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   -webkit-font-smoothing: antialiased;
