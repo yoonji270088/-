@@ -7,33 +7,50 @@ declare global { interface Window { kakao: any; } }
 function KakaoMap() {
   const containerRef = useRef<HTMLDivElement>(null);
   const initialized  = useRef(false);
-  const key = import.meta.env.VITE_KAKAO_MAP_KEY as string | undefined;
-  console.log("KAKAO MAP KEY:", key);
-
-  const lat     = WEDDING.location.lat;
-  const lng     = WEDDING.location.lng;
+  const key     = import.meta.env.VITE_KAKAO_MAP_KEY as string | undefined;
+  const placeId = WEDDING.location.placeId;
   const name    = WEDDING.location.placeName;
   const address = WEDDING.location.address;
 
   useEffect(() => {
-    if (!key) return; // fallback iframe 사용
+    if (!key) return;
 
     const initMap = () => {
       if (initialized.current || !containerRef.current) return;
       initialized.current = true;
+
       window.kakao.maps.load(() => {
         if (!containerRef.current) return;
-        const center = new window.kakao.maps.LatLng(lat, lng);
-        const map = new window.kakao.maps.Map(containerRef.current, { center, level: 4 });
-        const marker = new window.kakao.maps.Marker({ map, position: center, title: name });
-        const infowindow = new window.kakao.maps.InfoWindow({
-          content: `<div style="padding:6px 10px;font-family:'Pretendard',sans-serif;"><div style="font-size:13px;font-weight:600;white-space:nowrap;">${name}</div><div style="font-size:11px;color:#666;margin-top:2px;white-space:nowrap;">${address}</div></div>`,
-        });
-        infowindow.open(map, marker);
+
+        // Places API로 장소 ID 검색 → 카카오가 제공하는 실제 WGS84 좌표 사용
+        const ps = new window.kakao.maps.services.Places();
+        ps.keywordSearch(
+          name,
+          (results: any[], status: string) => {
+            if (status !== window.kakao.maps.services.Status.OK || !containerRef.current) return;
+
+            // ID가 일치하는 결과 우선, 없으면 첫 번째
+            const place = results.find((r: any) => r.id === placeId) ?? results[0];
+            if (!place) return;
+
+            const lat = parseFloat(place.y);
+            const lng = parseFloat(place.x);
+            const center = new window.kakao.maps.LatLng(lat, lng);
+            const map = new window.kakao.maps.Map(containerRef.current, { center, level: 4 });
+            new window.kakao.maps.Marker({ map, position: center, title: place.place_name });
+            const infowindow = new window.kakao.maps.InfoWindow({
+              content: `<div style="padding:6px 10px;font-family:'Pretendard',sans-serif;">
+                <div style="font-size:13px;font-weight:600;white-space:nowrap;">${place.place_name}</div>
+                <div style="font-size:11px;color:#666;margin-top:2px;white-space:nowrap;">${place.road_address_name || address}</div>
+              </div>`,
+            });
+            infowindow.open(map, new window.kakao.maps.Marker({ position: center }));
+          },
+        );
       });
     };
 
-    if (window.kakao?.maps) { initMap(); return; }
+    if (window.kakao?.maps?.services) { initMap(); return; }
 
     if (document.getElementById("kakao-map-sdk")) {
       window.addEventListener("kakaoMapReady", initMap, { once: true });
@@ -42,16 +59,16 @@ function KakaoMap() {
 
     const script = document.createElement("script");
     script.id = "kakao-map-sdk";
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${key}&autoload=false`;
+    // services 라이브러리 포함 → Places API 사용 가능
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${key}&autoload=false&libraries=services`;
     script.async = true;
     script.onload = () => { window.dispatchEvent(new Event("kakaoMapReady")); initMap(); };
     document.head.appendChild(script);
     window.addEventListener("kakaoMapReady", initMap, { once: true });
   }, [key]);
 
-  // API key 없을 때: OpenStreetMap embed (인터랙티브, 핀 표시)
+  // API key 없을 때: 카카오맵 place 페이지 iframe embed
   if (!key) {
-    const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lng-0.008},${lat-0.005},${lng+0.008},${lat+0.005}&layer=mapnik&marker=${lat},${lng}`;
     return (
       <div style={{
         width: "100%", height: "clamp(180px, 52vw, 230px)",
@@ -60,7 +77,7 @@ function KakaoMap() {
       }}>
         <iframe
           title="지도"
-          src={osmUrl}
+          src={`https://place.map.kakao.com/${placeId}`}
           style={{ width: "100%", height: "100%", border: "none" }}
           allowFullScreen
         />
@@ -68,7 +85,6 @@ function KakaoMap() {
     );
   }
 
-  // Kakao SDK 컨테이너
   return (
     <div
       ref={containerRef}
