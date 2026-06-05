@@ -8,11 +8,12 @@ interface Props { phase: Phase; }
 
 export default function HeroSection({ phase }: Props) {
   const photoControls = useAnimation();
-  const photoStarted = useRef(false);
+  const photoStarted  = useRef(false);
   const namesRef = useRef<HTMLDivElement>(null);
   const groupRef = useRef<HTMLDivElement>(null);
   const dateRef  = useRef<HTMLDivElement>(null);
 
+  // 사진 등장 애니메이션 (transitioning 시작 시 1회)
   useEffect(() => {
     if ((phase === "transitioning" || phase === "done") && !photoStarted.current) {
       photoStarted.current = true;
@@ -27,10 +28,10 @@ export default function HeroSection({ phase }: Props) {
     }
   }, [phase, photoControls]);
 
-  // Splash 전환이 시작되는 순간(transitioning)에 hero 텍스트를 미리 노출
-  // — done 시점에 노출하면 SplashOverlay unmount와 타이밍이 겹쳐 깜빡임 발생
+  // hero 텍스트 visibility는 SplashOverlay의 전환 완료 시점에 맞춰
+  // SplashOverlay에서 직접 getElementById로 제어함 → 여기선 done 폴백만 유지
   useEffect(() => {
-    if (phase === "transitioning" || phase === "done") {
+    if (phase === "done") {
       if (namesRef.current) namesRef.current.style.visibility = "visible";
       if (groupRef.current) groupRef.current.style.visibility = "visible";
       if (dateRef.current)  dateRef.current.style.visibility  = "visible";

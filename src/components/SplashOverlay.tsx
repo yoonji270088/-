@@ -21,11 +21,10 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
   const groupRef = useRef<HTMLDivElement>(null);
   const dateRef  = useRef<HTMLDivElement>(null);
 
-  // 타이머 ref로 관리 — cleanup 시 확실히 취소
-  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const timersRef  = useRef<ReturnType<typeof setTimeout>[]>([]);
   const startedRef = useRef(false);
 
-  // 스크롤 잠금 — iOS Safari touchmove 차단
+  // 스크롤 잠금
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.overflow = "hidden";
@@ -37,13 +36,13 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
     };
   }, []);
 
-  // Names, Date fade-in (최초 1회만)
+  // Names, Date fade-in (최초 1회)
   useEffect(() => {
     namesCtrl.start({ opacity: 1, transition: { duration: 0.6, delay: 0.1 } });
     dateCtrl.start({ opacity: 1, transition: { duration: 0.6, delay: 0.3 } });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // stagger + onComplete — 최초 1회만 실행, unmount 시 타이머 전부 취소
+  // stagger + onComplete (최초 1회, unmount 시 타이머 취소)
   useEffect(() => {
     if (startedRef.current) return;
     startedRef.current = true;
@@ -67,7 +66,8 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // transitioning → Hero 위치로 이동
+  // transitioning → Hero 위치로 텍스트 이동
+  // x/y 대신 left/top을 직접 조작 → layout shift 없음
   useEffect(() => {
     if (phase !== "transitioning") return;
 
@@ -80,17 +80,21 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
     const dur = 1.3;
     const ease = [0.4, 0, 0.2, 1] as [number, number, number, number];
 
-    const namesR = namesRef.current.getBoundingClientRect();
-    const groupR = groupRef.current.getBoundingClientRect();
-    const dateR  = dateRef.current.getBoundingClientRect();
+    const namesR  = namesRef.current.getBoundingClientRect();
+    const groupR  = groupRef.current.getBoundingClientRect();
+    const dateR   = dateRef.current.getBoundingClientRect();
+    const hNamesR = heroNames.getBoundingClientRect();
+    const hGroupR = heroGroup.getBoundingClientRect();
+    const hDateR  = heroDate.getBoundingClientRect();
 
-    const namesDx = heroNames.getBoundingClientRect().left - namesR.left;
-    const namesDy = heroNames.getBoundingClientRect().top  - namesR.top;
-    const groupDx = heroGroup.getBoundingClientRect().left - groupR.left;
-    const groupDy = heroGroup.getBoundingClientRect().top  - groupR.top;
-    const dateDx  = heroDate.getBoundingClientRect().left  - dateR.left;
-    const dateDy  = heroDate.getBoundingClientRect().top   - dateR.top;
+    const namesDx = hNamesR.left - namesR.left;
+    const namesDy = hNamesR.top  - namesR.top;
+    const groupDx = hGroupR.left - groupR.left;
+    const groupDy = hGroupR.top  - groupR.top;
+    const dateDx  = hDateR.left  - dateR.left;
+    const dateDy  = hDateR.top   - dateR.top;
 
+    // x/y translate 사용 (framer-motion 기본) — layout에 영향 없음
     namesCtrl.start({ x: namesDx, y: namesDy, color: "#00226a", transition: { duration: dur, ease } });
     groupCtrl.start({ x: groupDx, y: groupDy, transition: { duration: dur, ease } });
     dateCtrl.start({ x: dateDx,  y: dateDy,  color: "#00226a", transition: { duration: dur, ease } });
@@ -99,6 +103,18 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
       (p as HTMLElement).style.transition = "color 1.1s ease-in-out";
       (p as HTMLElement).style.color = "#00226a";
     });
+
+    // 전환 완료(1.3s) 후 Hero 텍스트를 visible로 — Splash는 아직 위에 있음
+    const t = setTimeout(() => {
+      const n = document.getElementById("hero-names");
+      const g = document.getElementById("hero-group");
+      const d = document.getElementById("hero-date");
+      if (n) n.style.visibility = "visible";
+      if (g) g.style.visibility = "visible";
+      if (d) d.style.visibility = "visible";
+    }, dur * 1000);
+
+    timersRef.current.push(t);
   }, [phase, namesCtrl, groupCtrl, dateCtrl]);
 
   const isTransitioning = phase === "transitioning";
@@ -111,20 +127,21 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
         top: 0, left: 0, right: 0, bottom: 0,
         zIndex: 20,
         overflow: "hidden",
+        // transitioning 중에도 pointer 차단 유지
         pointerEvents: isTransitioning ? "none" : "auto",
         display: "flex",
         justifyContent: "center",
       }}
     >
+      {/* 배경 fade-out */}
       <motion.div
         animate={{ opacity: isTransitioning ? 0 : 1 }}
         transition={{ duration: 1.3, ease: "easeInOut" }}
         style={{ position: "absolute", inset: 0, backgroundColor: "#041438" }}
       />
 
-      <motion.div
-        animate={{ opacity: isTransitioning ? 0 : 1 }}
-        transition={{ duration: 1.0, ease: "easeInOut" }}
+      {/* 텍스트 컨테이너 — fade-out 없이 유지해야 이동 애니메이션이 보임 */}
+      <div
         style={{
           position: "relative",
           width: "100%",
@@ -223,8 +240,7 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
           </p>
         </motion.div>
 
-      </motion.div>
-
+      </div>
     </div>
   );
 }
