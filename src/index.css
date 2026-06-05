@@ -8,14 +8,16 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  height: 100%;
-  overflow: hidden; /* html은 스크롤 안 함 — 스크롤바 하나만 생기도록 */
+  margin: 0;
+  padding: 0;
+  /* overflow 미설정 → html은 스크롤 컨테이너 아님 → 스크롤바 없음 */
 }
 
 body {
-  min-height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;  /* 스크롤은 body 하나만 */
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* body만 스크롤 컨테이너 → 스크롤바 하나만 생김 */
   overscroll-behavior: none;
   background-color: #c8c5bc;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
