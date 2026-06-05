@@ -163,7 +163,7 @@ export default function HeroSection() {
           position: "absolute",
           zIndex: 4,
           // vw 기준 고정값 (430px max 기준 10.9cqw ≈ 10.9vw)
-          bottom: "min(10.9vw, 46.9px)",
+          bottom: "clamp(36px, 6vh, 60px)",
           left: 0, right: 0,
           display: "flex",
           flexDirection: "column",
@@ -174,10 +174,10 @@ export default function HeroSection() {
           paddingInline: "16px",
         }}
       >
-        <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 600, fontSize: "min(5.3vw, 22.8px)", whiteSpace: "nowrap" }}>
+        <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 600, fontSize: "min(4.9vw, 21.1px)", whiteSpace: "nowrap" }}>
           {WEDDING.dateDisplay}
         </p>
-        <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 400, fontSize: "min(3.7vw, 15.9px)", lineHeight: 1.2 }}>
+        <p style={{ margin: 0, fontFamily: "'Cormorant Infant', serif", fontWeight: 400, fontSize: "min(3.3vw, 14.2px)", lineHeight: 1.2 }}>
           {WEDDING.tagline1}<br />{WEDDING.tagline2}
         </p>
       </div>
