@@ -7,11 +7,21 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html, body {
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  /* html은 x축만 숨김 — y축 스크롤 소유권은 body에게만 */
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+body {
   margin: 0;
   padding: 0;
   width: 100%;
   overflow-x: hidden;
+  /* overflow-y는 SplashOverlay가 JS로 hidden/'' 제어 — 여기서 별도 지정 안 함 */
   scrollbar-gutter: stable;
   background-color: #c8c5bc;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
@@ -21,9 +31,11 @@ html, body {
 #root {
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   justify-content: center;
+  /* 이중 스크롤 방지: #root 자체는 스크롤 컨테이너가 되지 않음 */
+  overflow: visible;
 }
 
 p { margin: 0; }

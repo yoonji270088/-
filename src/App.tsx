@@ -26,7 +26,7 @@ export default function App() {
 
   const handleSplashComplete = () => {
     setPhase("transitioning");
-    setTimeout(() => setPhase("done"), 1400); // transition 1.3s + 0.1s 여유
+    setTimeout(() => setPhase("done"), 1400);
   };
 
   const isSplashVisible = phase === "splash" || phase === "transitioning";
@@ -37,7 +37,8 @@ export default function App() {
         width: "100%",
         minWidth: "320px",
         maxWidth: "430px",
-        minHeight: "100vh",
+        // minHeight는 유지하되 overflow는 지정하지 않음 → body 스크롤만 사용
+        minHeight: "100dvh",
         position: "relative",
         backgroundColor: "#ecece9",
         display: "flex",
@@ -46,7 +47,7 @@ export default function App() {
     >
       <HeroSection phase={phase} />
 
-      {/* 섹션들: 항상 DOM에 존재 (width/layout 계산 유지) — splash 중엔 숨김 */}
+      {/* 섹션들: 항상 DOM에 존재 — splash 중엔 숨김 */}
       <div
         ref={sectionsRef}
         style={{
