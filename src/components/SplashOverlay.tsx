@@ -108,7 +108,9 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
         style={{ position: "absolute", inset: 0, backgroundColor: "#041438" }}
       />
 
-      <div
+      <motion.div
+        animate={{ opacity: isTransitioning ? 0 : 1 }}
+        transition={{ duration: 1.0, ease: "easeInOut" }}
         style={{
           position: "relative",
           width: "100%",
@@ -207,7 +209,7 @@ export default function SplashOverlay({ phase, onComplete }: Props) {
           </p>
         </motion.div>
 
-      </div>
+      </motion.div>
     </div>
   );
 }

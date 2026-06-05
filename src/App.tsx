@@ -25,7 +25,7 @@ export default function App() {
 
   const handleSplashComplete = () => {
     setPhase("transitioning");
-    setTimeout(() => setPhase("done"), 1400);
+    setTimeout(() => setPhase("done"), 1500);
   };
 
   const isSplashVisible = phase === "splash" || phase === "transitioning";

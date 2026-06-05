@@ -27,9 +27,10 @@ export default function HeroSection({ phase }: Props) {
     }
   }, [phase, photoControls]);
 
-  // state 대신 ref로 직접 DOM 조작 → 리렌더 없음 → cqw 재계산 없음
+  // Splash 전환이 시작되는 순간(transitioning)에 hero 텍스트를 미리 노출
+  // — done 시점에 노출하면 SplashOverlay unmount와 타이밍이 겹쳐 깜빡임 발생
   useEffect(() => {
-    if (phase === "done") {
+    if (phase === "transitioning" || phase === "done") {
       if (namesRef.current) namesRef.current.style.visibility = "visible";
       if (groupRef.current) groupRef.current.style.visibility = "visible";
       if (dateRef.current)  dateRef.current.style.visibility  = "visible";
