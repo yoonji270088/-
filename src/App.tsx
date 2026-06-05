@@ -43,7 +43,7 @@ export default function App() {
       }}
     >
       {/* phase prop 제거 — HeroSection은 커스텀 이벤트로만 제어 */}
-      <HeroSection />
+      <HeroSection phase={phase} />
 
       <div
         ref={sectionsRef}
