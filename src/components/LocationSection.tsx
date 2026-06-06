@@ -99,15 +99,14 @@ function KakaoMap({ onCoords }: { onCoords?: (lat: number, lng: number) => void 
   );
 }
 
-function NaviBtn({ label, deepLink, webLink }: { label: string; deepLink: string; webLink: string }) {
+function NaviBtn({ label, deepLink, webLink, directApp }: { label: string; deepLink: string; webLink: string; directApp?: boolean }) {
   return (
     <button
       onClick={() => {
         const isKakaoInApp = /KAKAOTALK/i.test(navigator.userAgent);
 
-        if (isKakaoInApp) {
+        if (isKakaoInApp && !directApp) {
           // 카카오 인앱브라우저: 웹 먼저 열기 → 인앱브라우저 탭 유지
-          // 각 웹페이지(카카오맵/네이버/티맵)에서 앱으로 연결됨
           window.open(webLink, "_blank");
           return;
         }
@@ -195,7 +194,7 @@ export default function LocationSection() {
       <div style={{ display: "flex", flexDirection: "column", width: "100%", gap: "10px" }}>
         <KakaoMap onCoords={(lat, lng) => setCoords({ lat, lng })} />
         <div style={{ display: "flex", gap: "6px", width: "100%" }}>
-          <NaviBtn label="티맵"       deepLink={tmapLink}           webLink={naviLinks.tmapWeb} />
+          <NaviBtn label="티맵"       deepLink={tmapLink}           webLink={naviLinks.tmapWeb} directApp />
           <NaviBtn label="카카오내비"  deepLink={kakaoLink}          webLink={naviLinks.kakaoNaviWeb} />
           <NaviBtn label="네이버지도"  deepLink={naviLinks.naverMap} webLink={naviLinks.naverMapWeb} />
         </div>
